@@ -1,0 +1,3 @@
+[stat]
+regexp = '^([/\w\.]+\/)?stat'
+file = 'stat.toml'
