@@ -5,3 +5,7 @@ file = 'stat.toml'
 [ping]
 regexp = '^([/\w\.]+\/)?(io|o|n|h|arp|l2)?ping[236]?'
 file = 'ping.toml'
+
+[df]
+regexp = '^([/\w\.]+\/)?df'
+file = 'df.toml'
