@@ -9,3 +9,7 @@ file = 'ping.toml'
 [df]
 regexp = '^([/\w\.]+\/)?df'
 file = 'df.toml'
+
+[lsblk]
+regexp = '^([/\w\.]+\/)?lsblk\b'
+file = 'lsblk.toml'

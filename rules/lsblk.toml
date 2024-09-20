@@ -1,0 +1,66 @@
+"$schema" = "../rule.schema.json"
+
+[Headings]
+overwrite = true
+regexp = '^(([A-Z:-]+\s*)+)$'
+colors = 'bold blue'
+
+[Main_HD]
+regexp = '^([a-z]+\d?)\s'
+colors = 'bold white'
+
+[Partition]
+regexp = '([├└─│]+|[\|\`\-]+)(\S+)'
+colors = 'green'
+
+[Partition_LVM]
+regexp = '\s+([├└─│]+|[\|\`\-]+)(\S+)'
+colors = 'default,default,cyan'
+
+[Type_Crypt]
+regexp = '(?:\s(crypt))\b'
+colors = 'bgmagenta white'
+
+[Type_Disk]
+regexp = '(?:\s(disk))\b'
+colors = 'magenta'
+
+[Type_LVM]
+regexp = '(?:\s(lvm))\b'
+colors = 'bold cyan'
+
+[Type_Part]
+regexp = '(?:\s(part))\b'
+colors = 'cyan'
+
+[Type_Loop]
+regexp = '(?:\s(loop))\b'
+colors = 'bright_red'
+
+[Size_K]
+regexp = '\s(\d*[.,]?\dKi?)\s'
+colors = 'green'
+
+[Size_M]
+regexp = '\s(\d*[.,]?\dMi?)\s'
+colors = 'yellow'
+
+[Size_G]
+regexp = '\s(\d*[.,]?\dGi?)\s'
+colors = 'red'
+
+[Size_T]
+regexp = '\s(\d*[.,]?\dTi?)\s'
+colors = 'bold red'
+
+[Mount_Path]
+regexp = '(?:\s(\/[^\/ ]*))+$'
+colors = 'bold yellow'
+
+[Mount_SWAP]
+regexp = '\s\[(SWAP)\]'
+colors = 'magenta'
+
+[UUID]
+regexp = '(?:\s([0-9a-fA-F-]{4,}|[\w-]{38}))\b'
+colors = 'magenta'
