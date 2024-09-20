@@ -21,8 +21,9 @@ var (
 )
 
 type Rule struct {
-	Regexp string `toml:"regexp"`
-	Colors string `toml:"colors"`
+	Regexp    string `toml:"regexp"`
+	Colors    string `toml:"colors"`
+	Overwrite bool   `toml:"overwrite"`
 }
 
 // rootCmd represents the base command when called without any subcommands
