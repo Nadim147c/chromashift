@@ -72,8 +72,6 @@ var rootCmd = &cobra.Command{
 			re := regexp.MustCompile(`^\s*"?\$schema"?\s*=\s*[^#\n]*\s*\n?`)
 			cleanContent := re.ReplaceAll(content, nil)
 
-			fmt.Println(string(cleanContent))
-
 			_, err = toml.Decode(string(cleanContent), &rules)
 			if verbose && err != nil {
 				fmt.Fprintln(os.Stderr, "Can't load rules from path:", err)
