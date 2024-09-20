@@ -1,3 +1,7 @@
 [stat]
 regexp = '^([/\w\.]+\/)?stat'
 file = 'stat.toml'
+
+[ping]
+regexp = '^([/\w\.]+\/)?(io|o|n|h|arp|l2)?ping[236]?'
+file = 'ping.toml'

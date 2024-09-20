@@ -62,7 +62,19 @@ var rootCmd = &cobra.Command{
 		var rules map[string]Rule
 
 		if useColor && len(ruleFileName) > 0 {
-			_, err := toml.DecodeFile(filepath.Join("rules", ruleFileName), &rules)
+			path := filepath.Join("rules", ruleFileName)
+
+			content, err := os.ReadFile(path)
+			if err != nil {
+				fmt.Fprintln(os.Stderr, "Error reading file:", err)
+			}
+
+			re := regexp.MustCompile(`^\s*"?\$schema"?\s*=\s*[^#\n]*\s*\n?`)
+			cleanContent := re.ReplaceAll(content, nil)
+
+			fmt.Println(string(cleanContent))
+
+			_, err = toml.Decode(string(cleanContent), &rules)
 			if verbose && err != nil {
 				fmt.Fprintln(os.Stderr, "Can't load rules from path:", err)
 			}
@@ -79,7 +91,6 @@ var rootCmd = &cobra.Command{
 			fmt.Fprintln(os.Stderr, "Error creating stdout pipe:", err)
 			os.Exit(1)
 		}
-
 		if err := runCmd.Start(); err != nil {
 			fmt.Fprintln(os.Stderr, "Error starting command:", err)
 			os.Exit(1)
@@ -89,7 +100,10 @@ var rootCmd = &cobra.Command{
 		for scanner.Scan() {
 			srcLine := scanner.Text()
 
-			coloredLine := ColorizeLine(srcLine, rules)
+			coloredLine := ""
+			if useColor && len(rules) > 0 {
+				coloredLine = ColorizeLine(srcLine, rules)
+			}
 
 			if len(coloredLine) > 0 {
 				fmt.Println(coloredLine)
