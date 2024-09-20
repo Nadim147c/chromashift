@@ -7,6 +7,24 @@ import (
 	"strings"
 )
 
+func ExtentColorMapFromMatches(colorMap map[int]string, matches [][]int, colors []string) {
+	for _, match := range matches {
+		for i := range (len(match) - 2) / 2 {
+			start := match[i*2+2]
+			end := match[i*2+3]
+			cfgStyle := strings.TrimSpace(colors[i%len(colors)])
+			colorMap[start] = cfgStyle
+
+			if len(colorMap[end]) > 0 {
+				colorMap[end] = "reset " + colorMap[end]
+			} else {
+				colorMap[end] = "reset"
+			}
+
+		}
+	}
+}
+
 func ColorizeLine(line string, rules map[string]Rule) string {
 	coloredLine := ""
 
@@ -20,24 +38,20 @@ func ColorizeLine(line string, rules map[string]Rule) string {
 			}
 			continue
 		}
+
 		colors := strings.Split(rule.Colors, ",")
 
 		matches := re.FindAllStringSubmatchIndex(line, -1)
 
-		for _, match := range matches {
-			for i := range (len(match) - 2) / 2 {
-				start := match[i*2+2]
-				end := match[i*2+3]
-				cfgStyle := strings.TrimSpace(colors[i%len(colors)])
-				colorMap[start] = cfgStyle
-
-				if len(colorMap[end]) > 0 {
-					colorMap[end] = "reset " + colorMap[end]
-				} else {
-					colorMap[end] = "reset"
-				}
-
+		if rule.Overwrite && len(matches) > 0 {
+			if verbose {
+				fmt.Println("Overwriting other rules for current line")
 			}
+			colorMap = make(map[int]string)
+			ExtentColorMapFromMatches(colorMap, matches, colors)
+			break
+		} else {
+			ExtentColorMapFromMatches(colorMap, matches, colors)
 		}
 
 	}

@@ -10,6 +10,10 @@
         },
         "colors": {
           "type": "string"
+        },
+        "overwrite": {
+          "type": "boolean",
+          "default": "true"
         }
       },
       "required": ["regexp", "colors"]

@@ -1,6 +1,7 @@
 "$schema" = "../rule.schema.json"
 
 [FS]
+overwrite = true
 regexp = '^(Filesystem.*)$'
 colors = 'bold blue'
 
@@ -45,6 +46,6 @@ regexp = '(\s9[89]%|100%\s)'
 colors = 'bold red'
 
 [Tmpfs_Lines]
-type = 'only'
+overwrite = true
 regexp = '(^tmpfs.*)'
 colors = 'black'
