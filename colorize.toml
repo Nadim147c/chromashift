@@ -1,31 +1,35 @@
 [stat]
-regexp = '^([/\w\.]+\/)?stat'
+regexp = '^([/\w\.]+\/)?stat\b'
 file = 'stat.toml'
 
 [ping]
-regexp = '^([/\w\.]+\/)?(io|o|n|h|arp|l2)?ping[236]?'
+regexp = '^([/\w\.]+\/)?(io|o|n|h|arp|l2)?ping[236]?\b'
 file = 'ping.toml'
 
 [cp]
-regexp = '^([/\w\.]+\/)?cp'
+regexp = '^([/\w\.]+\/)?cp\b'
 file = 'cp.toml'
 
 [mv]
-regexp = '^([/\w\.]+\/)?mv'
+regexp = '^([/\w\.]+\/)?mv\b'
 file = 'mv.toml'
 
 [rm]
-regexp = '^([/\w\.]+\/)?rm'
+regexp = '^([/\w\.]+\/)?rm\b'
 file = 'rm.toml'
 
 [df]
-regexp = '^([/\w\.]+\/)?df'
+regexp = '^([/\w\.]+\/)?df\b'
 file = 'df.toml'
 
 [lsblk]
-regexp = '^([/\w\.]+\/)?lsblk'
+regexp = '^([/\w\.]+\/)?lsblk\b'
 file = 'lsblk.toml'
 
 [traceroute]
-regexp = '^([/\w\.]+\/)?traceroute6?'
+regexp = '^([/\w\.]+\/)?traceroute6?\b'
 file = 'traceroute.toml'
+
+[ps]
+regexp = '^([/\w\.]+\/)?ps\b'
+file = 'ps.toml'

@@ -1,0 +1,74 @@
+"$schema" = "../rule.schema.json"
+
+[Heading]
+overwrite = true
+regexp = '^([A-Z\s%]*([A-Z]{3})[A-Z\s%]*)$'
+colors = 'bold blue underline'
+
+[fullpath]
+regexp = '(\s|^)(/[-\w\d\.]+/[-\w\d./]+)'
+colors = 'none,bold green'
+
+[Capd_Line]
+regexp = '^([A-Z][-a-z0-9]+(\s+|$)){3,}$'
+colors = 'underline'
+
+[PID]
+regexp = '^[a-zA-Z]+\w+\+?\s+(\d+)|^\d\s+\w\s+(?:\w+\s+)?(\d+)|^\s*(\d+)'
+colors = 'bold magenta'
+
+["n.n.n"]
+regexp = '(\s|^)(?:(\d+\.\d+\.\d+)[\s,]|$)'
+colors = 'bold cyan'
+
+[username]
+regexp = '^([a-zA-z]\S+)\b'
+colors = 'green'
+
+[root]
+regexp = '(?:(root|wheel)\s|$)'
+colors = 'bold red'
+
+[text2]
+regexp = '^([-a-z0-9]+):\s'
+colors = 'yellow'
+
+[options]
+regexp = '\s(-\w+)\s|$'
+colors = 'cyan'
+
+[long-option-value]
+regexp = '\s-(?:(?:-[\w\d]+)+(=|\s))([^ ]+)'
+colors = 'yellow'
+
+[long-option]
+regexp = '(?:\s(-(-[\w\d]+)+(\=|\s)?))'
+colors = 'cyan'
+
+[pts]
+regexp = '(?:(?:\s|^)(pts/\d+)[^\w\d]|$)'
+colors = 'yellow'
+
+[tty]
+regexp = '(?:(?:\s|^)(tty\d+)[^\w\d]|$)'
+colors = 'cyan'
+
+[Negative_NICE]
+regexp = '^\d\s+\w\s+\w+\s+\d+\s+\d+\s+\d\s+\d+\s+(-\d+)'
+colors = 'bgred bold white'
+
+[Neutral_NICE]
+regexp = '^\d\s+\w\s+\w+\s+\d+\s+\d+\s+\d\s+\d+\s+(\d+)'
+colors = 'cyan'
+
+[Positive_NICE]
+regexp = '^\d\s+\w\s+\w+\s+\d+\s+\d+\s+\d\s+\d+\s+(1\d)'
+colors = 'bgcycan bold white'
+
+[Process_ZOMBIE]
+regexp = '^\d\s+([zZ])\s'
+colors = 'bgred bold white'
+
+[Process_RS]
+regexp = '^\d\s+([sSrR])\s'
+colors = 'unchanged,on_magenta black'
