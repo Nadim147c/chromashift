@@ -25,3 +25,7 @@ file = 'df.toml'
 [lsblk]
 regexp = '^([/\w\.]+\/)?lsblk'
 file = 'lsblk.toml'
+
+[traceroute]
+regexp = '^([/\w\.]+\/)?traceroute6?'
+file = 'traceroute.toml'
