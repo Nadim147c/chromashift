@@ -6,10 +6,22 @@ file = 'stat.toml'
 regexp = '^([/\w\.]+\/)?(io|o|n|h|arp|l2)?ping[236]?'
 file = 'ping.toml'
 
+[cp]
+regexp = '^([/\w\.]+\/)?cp'
+file = 'cp.toml'
+
+[mv]
+regexp = '^([/\w\.]+\/)?mv'
+file = 'mv.toml'
+
+[rm]
+regexp = '^([/\w\.]+\/)?rm'
+file = 'rm.toml'
+
 [df]
 regexp = '^([/\w\.]+\/)?df'
 file = 'df.toml'
 
 [lsblk]
-regexp = '^([/\w\.]+\/)?lsblk\b'
+regexp = '^([/\w\.]+\/)?lsblk'
 file = 'lsblk.toml'
