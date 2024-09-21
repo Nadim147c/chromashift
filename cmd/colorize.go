@@ -68,5 +68,5 @@ func ColorizeLine(line string, rules map[string]Rule) string {
 		}
 	}
 
-	return coloredLine
+	return coloredLine + Ansi.Reset
 }
