@@ -13,7 +13,7 @@ type Config struct {
 	File   string `toml:"file"`
 }
 
-func loadConfig(verbose bool) (map[string]Config, error) {
+func loadConfig() (map[string]Config, error) {
 	var config map[string]Config
 
 	homeDir, err := os.UserHomeDir()
@@ -37,7 +37,6 @@ func loadConfig(verbose bool) (map[string]Config, error) {
 		os.Getenv("COLORIZE_CONFIG"),
 		filepath.Join(homeDir, ".config/colorize/config.toml"),
 		"/etc/colorize.toml",
-		"./colorize.toml",
 	}
 
 	for _, path := range configPaths {

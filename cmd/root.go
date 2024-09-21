@@ -5,28 +5,19 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"regexp"
 	"strings"
 
-	"github.com/BurntSushi/toml"
 	"github.com/spf13/cobra"
 )
 
 var (
 	cfgFile  string
-	ruleDir  string
+	rulesDir string
 	verbose  bool
 	useColor bool
 )
 
-type Rule struct {
-	Regexp    string `toml:"regexp"`
-	Colors    string `toml:"colors"`
-	Overwrite bool   `toml:"overwrite"`
-}
-
-// rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Example: "colorize -- stat go.mod",
 	Use:     "colorize [OPTOINS] -- COMMAND [OPTIONS/ARGUMENTS]",
@@ -42,7 +33,7 @@ var rootCmd = &cobra.Command{
 		cmdName := args[0]
 		cmdArgs := args[1:]
 
-		config, err := loadConfig(verbose)
+		config, err := loadConfig()
 
 		if err != nil && verbose {
 			fmt.Fprintln(os.Stderr, "Failed to load config:", err)
@@ -63,19 +54,9 @@ var rootCmd = &cobra.Command{
 		var rules map[string]Rule
 
 		if useColor && len(ruleFileName) > 0 {
-			path := filepath.Join("rules", ruleFileName)
-
-			content, err := os.ReadFile(path)
-			if err != nil {
-				fmt.Fprintln(os.Stderr, "Error reading file:", err)
-			}
-
-			re := regexp.MustCompile(`^\s*"?\$schema"?\s*=\s*[^#\n]*\s*\n?`)
-			cleanContent := re.ReplaceAll(content, nil)
-
-			_, err = toml.Decode(string(cleanContent), &rules)
+			rules, err = loadRules(ruleFileName)
 			if verbose && err != nil {
-				fmt.Fprintln(os.Stderr, "Can't load rules from path:", err)
+				fmt.Println("Failed to load rules for current command:", err)
 			}
 		}
 
@@ -126,6 +107,7 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cobra.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "specify path to the config file")
+	rootCmd.PersistentFlags().StringVar(&rulesDir, "rules-dir", "", "specify path to the rules directory")
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
 }
