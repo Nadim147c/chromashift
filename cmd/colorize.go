@@ -2,12 +2,10 @@ package cmd
 
 import (
 	"fmt"
-	"os"
-	"regexp"
 	"strings"
 )
 
-func ExtentColorMapFromMatches(colorMap map[int]string, matches [][]int, colors []string) {
+func extentColorMapFromMatches(colorMap map[int]string, matches [][]int, colors []string) {
 	for _, match := range matches {
 		for i := range (len(match) - 2) / 2 {
 			start := match[i*2+2]
@@ -25,17 +23,14 @@ func ExtentColorMapFromMatches(colorMap map[int]string, matches [][]int, colors 
 	}
 }
 
-func ColorizeLine(line string, rules map[string]Rule) string {
+func colorizeLine(line string, rules []Rule) string {
 	coloredLine := ""
 
 	colorMap := make(map[int]string)
 
-	for section, rule := range rules {
-		re, err := regexp.Compile(rule.Regexp)
-		if err != nil {
-			if verbose {
-				fmt.Fprintf(os.Stderr, "[%s] Invalid regexp: \n\t%s\n", section, err)
-			}
+	for _, rule := range rules {
+		re := rule.Regexp
+		if re == nil {
 			continue
 		}
 
@@ -48,10 +43,10 @@ func ColorizeLine(line string, rules map[string]Rule) string {
 				fmt.Println("Overwriting other rules for current line")
 			}
 			colorMap = make(map[int]string)
-			ExtentColorMapFromMatches(colorMap, matches, colors)
+			extentColorMapFromMatches(colorMap, matches, colors)
 			break
 		} else {
-			ExtentColorMapFromMatches(colorMap, matches, colors)
+			extentColorMapFromMatches(colorMap, matches, colors)
 		}
 
 	}

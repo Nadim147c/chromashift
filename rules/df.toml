@@ -1,51 +1,51 @@
 "$schema" = "../rule.schema.json"
 
-[FS]
+[[rules]] # FS
 overwrite = true
 regexp = '^(Filesystem.*)$'
 colors = 'bold blue'
 
-[Device]
+[[rules]] # Device
 regexp = '^((\/?[-\w\d.\s]+)+)\s'
 colors = 'bold cyan'
 
-[Mounted]
+[[rules]] # Mounted
 regexp = '(\/$|(\/[-\w\d. ]+)+)$'
 colors = 'bold green'
 
-[Size-K-OR-B]
+[[rules]] # Size-K-OR-B
 regexp = '(\s\d*[.,]?\d(K|B)i?\s)|\s(\d{1,3}\s)'
 colors = 'green'
 
-[Size-M]
+[[rules]] # Size-M
 regexp = '(\s\d*[.,]?\dMi?\s)|\s(\d{4,6}\s)'
 colors = 'yellow'
 
-[Size-G]
+[[rules]] # Size-G
 regexp = '(\s\d*[.,]?\dGi?\s)|\s(\d{7,9}\s)'
 colors = 'red'
 
-[Size-T]
+[[rules]] # Size-T
 regexp = '(\s\d*[.,]?\dTi?\s)|\s(\d{10,12}\s)'
 colors = 'bold red'
 
-[Use_0-60]
+[[rules]] # Use_0-60
 regexp = '(\s[1-6]?[0-9]%\s)'
 colors = 'green'
 
-[Use_70-89]
+[[rules]] # Use_70-89
 regexp = '(\s[78][0-9]%\s)'
 colors = 'yellow'
 
-[Use_90-97]
+[[rules]] # Use_90-97
 regexp = '(\s9[0-7]%\s)'
 colors = 'red'
 
-[Use_98-100]
+[[rules]] # Use_98-100
 regexp = '(\s9[89]%|100%\s)'
 colors = 'bold red'
 
-[Tmpfs_Lines]
+[[rules]] # Tmpfs_Lines
 overwrite = true
 regexp = '(^tmpfs.*)'
 colors = 'black'

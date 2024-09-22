@@ -1,65 +1,65 @@
 "$schema" = "../rule.schema.json"
 
-[IP]
+[[rules]] # IP
 regexp = '(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'
 colors = 'bold magenta'
 
-[IPv6]
+[[rules]] # IPv6
 regexp = '(([0-9a-fA-F]{1,4})?\:\:?[0-9a-fA-F]{1,4})+'
 colors = 'bold magenta'
 
-[Icmp_Seq]
+[[rules]] # Icmp_Seq
 regexp = 'icmp_seq=(\d+)'
 colors = 'bold yellow'
 
-[TTL]
+[[rules]] # TTL
 regexp = 'ttl=(\d+)'
 colors = 'bold cyan'
 
-[Name]
+[[rules]] # Name
 regexp = '(?:[fF]rom|PING)\s(\S+)\s'
 colors = 'blue'
 
-[Time]
+[[rules]] # Time
 regexp = '([0-9\.]+)\s?(ms)'
 colors = 'bold green,bold'
 
-[Bytes]
+[[rules]] # Bytes
 regexp = '([0-9]+)\s?(bytes)'
 colors = 'bold red,bold'
 
-[DUP]
+[[rules]] # DUP
 regexp = 'DUP\!'
 colors = 'red'
 
-[OK]
+[[rules]] # OK
 regexp = ' 0(\.0)?% packet loss'
 colors = 'green'
 
-[Errors]
+[[rules]] # Errors
 regexp = '(Destination Host Unreachable|100(\.0)?% packet loss)'
 colors = 'red'
 
-[Unknown-Host]
+[[rules]] # Unknown-Host
 regexp = '.+unknown\shost\s(.+)'
 colors = 'red,bold red'
 
-[Statistics-Header]
+[[rules]] # Statistics-Header
 regexp = '--- (\S+) ping statistics ---'
 colors = 'bold,bold blue'
 
-[min_avg_max_mdev]
+[[rules]] # min_avg_max_mdev
 regexp = 'rtt (min)/(avg)/(max)/(mdev)'
 colors = 'yellow,blue,red,magenta'
 
-[Last-Line-Values]
+[[rules]] # Last-Line-Values
 regexp = '\=\s([0-9\.]+)\/([0-9\.]+)\/([0-9\.]+)\/([0-9\.]+)'
 colors = 'yellow,blue,red,magenta'
 
-[these-are-good-for-nping]
+[[rules]] # these-are-good-for-nping
 regexp = 'SENT|RCVD'
 colors = 'red'
 
-[NPing]
+[[rules]] # NPing
 regexp = 'unreachable'
 colors = 'red'

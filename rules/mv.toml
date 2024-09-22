@@ -1,5 +1,5 @@
 "$schema" = "../rule.schema.json"
 
-[Main]
+[[rules]] # Main
 regexp = "(renamed) '(.*)' (->) '(.*)'"
 colors = 'bold green,magenta,bold yellow,green'
