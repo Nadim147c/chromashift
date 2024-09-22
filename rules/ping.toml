@@ -48,7 +48,7 @@ colors = 'red,bold red'
 regexp = '--- (\S+) ping statistics ---'
 colors = 'bold,bold blue'
 
-['min/avg/max/mdev']
+[min_avg_max_mdev]
 regexp = 'rtt (min)/(avg)/(max)/(mdev)'
 colors = 'yellow,blue,red,magenta'
 
