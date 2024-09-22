@@ -17,6 +17,7 @@ type AnsiCode struct {
 	Magenta   string
 	Cyan      string
 	White     string
+	Gray      string
 	BgBlack   string
 	BgRed     string
 	BgGreen   string
@@ -25,6 +26,7 @@ type AnsiCode struct {
 	BgMagenta string
 	BgCyan    string
 	BgWhite   string
+	BgGray    string
 }
 
 var Ansi = AnsiCode{
@@ -42,6 +44,7 @@ var Ansi = AnsiCode{
 	Magenta:   "\033[35m",
 	Cyan:      "\033[36m",
 	White:     "\033[37m",
+	Gray:      "\033[90m",
 	BgBlack:   "\033[40m",
 	BgRed:     "\033[41m",
 	BgGreen:   "\033[42m",
@@ -50,10 +53,11 @@ var Ansi = AnsiCode{
 	BgMagenta: "\033[45m",
 	BgCyan:    "\033[46m",
 	BgWhite:   "\033[47m",
+	BgGray:    "\033[100",
 }
 
 func (a AnsiCode) GetColor(colorName string) string {
-	colorName = strings.ToLower(colorName)
+	colorName = strings.ToLower(strings.TrimSpace(colorName))
 
 	switch colorName {
 	case "reset":
@@ -84,6 +88,8 @@ func (a AnsiCode) GetColor(colorName string) string {
 		return a.Cyan
 	case "white":
 		return a.White
+	case "gray":
+		return a.Gray
 	case "bgblack":
 		return a.BgBlack
 	case "bgred":
@@ -100,6 +106,8 @@ func (a AnsiCode) GetColor(colorName string) string {
 		return a.BgCyan
 	case "bgwhite":
 		return a.BgWhite
+	case "bggray":
+		return a.BgGray
 	default:
 		return ""
 	}
