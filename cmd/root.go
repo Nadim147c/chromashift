@@ -19,8 +19,8 @@ var (
 )
 
 var rootCmd = &cobra.Command{
-	Example: "colorize -- stat go.mod",
 	Use:     "colorize [OPTOINS] -- COMMAND [OPTIONS/ARGUMENTS]",
+	Example: "colorize -- stat go.mod",
 	Short:   "A colorizer for your favorite commands",
 	Run: func(cmd *cobra.Command, args []string) {
 		useColor = true
@@ -107,7 +107,8 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "specify path to the config file")
-	rootCmd.PersistentFlags().StringVar(&rulesDir, "rules-dir", "", "specify path to the rules directory")
-	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
+	rootCmd.SetErrPrefix("Colorize Error:")
+	rootCmd.Flags().StringVar(&cfgFile, "config", "", "specify path to the config file")
+	rootCmd.Flags().StringVar(&rulesDir, "rules-dir", "", "specify path to the rules directory")
+	rootCmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
 }
