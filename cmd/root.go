@@ -51,17 +51,17 @@ var rootCmd = &cobra.Command{
 			}
 		}
 
-		var rules map[string]Rule
+		var cmdRules CommandRules
 
 		if useColor && len(ruleFileName) > 0 {
-			rules, err = loadRules(ruleFileName)
+			cmdRules, err = loadRules(ruleFileName)
 			if verbose && err != nil {
 				fmt.Println("Failed to load rules for current command:", err)
 			}
 		}
 
 		if verbose {
-			fmt.Printf("%d rules found.\n", len(rules))
+			fmt.Printf("%d rules found.\n", len(cmdRules.Rules))
 		}
 
 		runCmd := exec.Command(cmdName, cmdArgs...)
@@ -81,8 +81,8 @@ var rootCmd = &cobra.Command{
 			srcLine := scanner.Text()
 
 			coloredLine := ""
-			if useColor && len(rules) > 0 {
-				coloredLine = ColorizeLine(srcLine, rules)
+			if useColor && len(cmdRules.Rules) > 0 {
+				coloredLine = colorizeLine(srcLine, cmdRules.Rules)
 			}
 
 			if len(coloredLine) > 0 {

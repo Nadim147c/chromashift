@@ -1,10 +1,10 @@
 "$schema" = "../rule.schema.json"
 
-[Main]
+[[rules]] # Main
 regexp = "(.*) '(.*)'"
 colors = 'bold red,yellow'
 
-[Directory]
+[[rules]] # Directory
 regexp = "(.*) (directory) '(.*)'"
 colors = 'bold red,bold magenta,yellow'
 overwrite = true

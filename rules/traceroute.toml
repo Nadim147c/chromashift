@@ -1,45 +1,45 @@
 "$schema" = ' "../rule.schema.json"'
 
-[Number]
+[[rules]] # Number
 regexp = '^\s*(\d+)\s+'
 colors = 'bold white'
 
-[hostname]
+[[rules]] # hostname
 regexp = '(\s\w+[\w\-\.]+\w+)'
 colors = 'bold blue'
 
-[IP]
+[[rules]] # IP
 regexp = '(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'
 colors = 'magenta'
 
-[IPv6]
+[[rules]] # IPv6
 regexp = '(([0-9a-fA-F]{1,4})?\:\:?[0-9a-fA-F]{1,4})+'
 colors = 'magenta'
 
-[Time]
+[[rules]] # Time
 regexp = '(?:(\d+\.?\d*)\s*ms)'
 colors = 'green'
 
-[ms]
+[[rules]] # ms
 regexp = '\b(ms)\b'
 colors = 'yellow'
 
-[DUP]
+[[rules]] # DUP
 regexp = '\b(DUP)'
 colors = 'red'
 
-[host_unreachable]
+[[rules]] # host_unreachable
 regexp = '\s\!([HNPSFXVC]|\d+)'
 colors = 'red'
 
-[TTL]
+[[rules]] # TTL
 regexp = '(ttl=\d+\!)'
 colors = 'cyan'
 
-[star]
+[[rules]] # star
 regexp = '(\*)'
 colors = 'red'
 
-[parenthesis]
+[[rules]] # parenthesis
 regexp = '(\(|\))'
 colors = 'yellow'
