@@ -8,15 +8,24 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/efekarakus/termcolor"
 	"github.com/spf13/cobra"
 )
 
 var (
+	color    string
 	cfgFile  string
 	rulesDir string
 	verbose  bool
 	useColor bool
 )
+
+func startRunWithoutColor(runCmd *exec.Cmd) {
+	runCmd.Stderr = os.Stderr
+	runCmd.Stdout = os.Stdout
+	runCmd.Run()
+	os.Exit(0)
+}
 
 var rootCmd = &cobra.Command{
 	Use:     "colorize [OPTOINS] -- COMMAND [OPTIONS/ARGUMENTS]",
@@ -33,6 +42,21 @@ var rootCmd = &cobra.Command{
 		cmdName := args[0]
 		cmdArgs := args[1:]
 
+		runCmd := exec.Command(cmdName, cmdArgs...)
+
+		switch color {
+		case "never":
+			useColor = false
+		case "always":
+			useColor = true
+		case "auto":
+			useColor = termcolor.SupportsBasic(os.Stdout)
+		}
+
+		if !useColor {
+			startRunWithoutColor(runCmd)
+		}
+
 		config, err := loadConfig()
 
 		if err != nil && verbose {
@@ -43,28 +67,40 @@ var rootCmd = &cobra.Command{
 		for name, values := range config {
 			if cmdName == name {
 				ruleFileName = values.File
+				break
 			}
 
 			commandStr := strings.Join(args, " ")
 			if matched, _ := regexp.Match(values.Regexp, []byte(commandStr)); matched {
 				ruleFileName = values.File
+				break
 			}
 		}
 
-		var cmdRules CommandRules
-
-		if useColor && len(ruleFileName) > 0 {
-			cmdRules, err = loadRules(ruleFileName)
-			if verbose && err != nil {
-				fmt.Println("Failed to load rules for current command:", err)
+		if len(ruleFileName) <= 0 {
+			if verbose {
+				fmt.Println("No config exists for current command")
 			}
+			startRunWithoutColor(runCmd)
+		}
+
+		cmdRules, err := loadRules(ruleFileName)
+		if verbose && err != nil {
+			fmt.Println("Failed to load rules for current command:", err)
+		}
+
+		if len(cmdRules.Rules) <= 0 {
+			if verbose {
+				fmt.Println("No config exists for current command")
+			}
+			startRunWithoutColor(runCmd)
 		}
 
 		if verbose {
 			fmt.Printf("%d rules found.\n", len(cmdRules.Rules))
 		}
 
-		runCmd := exec.Command(cmdName, cmdArgs...)
+		runCmd.Stderr = os.Stderr
 
 		stdout, err := runCmd.StdoutPipe()
 		if err != nil {
@@ -80,11 +116,7 @@ var rootCmd = &cobra.Command{
 		for scanner.Scan() {
 			srcLine := scanner.Text()
 
-			coloredLine := ""
-			if useColor && len(cmdRules.Rules) > 0 {
-				coloredLine = colorizeLine(srcLine, cmdRules.Rules)
-			}
-
+			coloredLine := colorizeLine(srcLine, cmdRules.Rules)
 			if len(coloredLine) > 0 {
 				fmt.Println(coloredLine)
 			} else {
@@ -110,5 +142,6 @@ func init() {
 	rootCmd.SetErrPrefix("Colorize Error:")
 	rootCmd.Flags().StringVar(&cfgFile, "config", "", "specify path to the config file")
 	rootCmd.Flags().StringVar(&rulesDir, "rules-dir", "", "specify path to the rules directory")
+	rootCmd.Flags().StringVar(&color, "color", "auto", "whether use color or not (never, auto, always)")
 	rootCmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
 }
