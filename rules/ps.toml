@@ -17,7 +17,7 @@ colors = 'underline'
 regexp = '^[a-zA-Z]+\w+\+?\s+(\d+)|^\d\s+\w\s+(?:\w+\s+)?(\d+)|^\s*(\d+)'
 colors = 'bold magenta'
 
-["n.n.n"]
+[nnn]
 regexp = '(\s|^)(?:(\d+\.\d+\.\d+)[\s,]|$)'
 colors = 'bold cyan'
 
@@ -37,11 +37,12 @@ colors = 'yellow'
 regexp = '\s(-\w+)\s|$'
 colors = 'cyan'
 
-[long-option-value]
+[long_option_value]
+priority = 100
 regexp = '\s-(?:(?:-[\w\d]+)+(=|\s))([^ ]+)'
 colors = 'yellow'
 
-[long-option]
+[long_option]
 regexp = '(?:\s(-(-[\w\d]+)+(\=|\s)?))'
 colors = 'cyan'
 

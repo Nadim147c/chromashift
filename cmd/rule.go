@@ -6,6 +6,7 @@ import (
 	"path"
 	"path/filepath"
 	"regexp"
+	"sort"
 
 	"github.com/BurntSushi/toml"
 )
@@ -14,6 +15,7 @@ type Rule struct {
 	Regexp    string `toml:"regexp"`
 	Colors    string `toml:"colors"`
 	Overwrite bool   `toml:"overwrite"`
+	Priority  int    `toml:"priority"`
 }
 
 func loadRules(ruleFile string) (map[string]Rule, error) {
@@ -57,6 +59,30 @@ func loadRules(ruleFile string) (map[string]Rule, error) {
 
 			_, err = toml.Decode(string(cleanContent), &rules)
 			if err == nil {
+				type RuleSliceItem struct {
+					Key   string
+					Value Rule
+				}
+				var ruleSlice []RuleSliceItem
+
+				for key, value := range rules {
+					ruleSlice = append(ruleSlice, RuleSliceItem{key, value})
+				}
+
+				sort.Slice(ruleSlice, func(i int, j int) bool {
+					// First sort by Overwrite (descending)
+					if ruleSlice[i].Value.Overwrite != ruleSlice[j].Value.Overwrite {
+						return ruleSlice[i].Value.Overwrite
+					}
+					return ruleSlice[i].Value.Priority > ruleSlice[j].Value.Priority
+				})
+
+				rules = make(map[string]Rule)
+
+				for _, sliceItem := range ruleSlice {
+					rules[sliceItem.Key] = sliceItem.Value
+				}
+
 				return rules, nil
 			} else {
 				fmt.Fprintln(os.Stderr, "Can't load rules from path:", err)
