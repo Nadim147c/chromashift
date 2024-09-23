@@ -12,6 +12,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var Version = "dev"
+
 var (
 	color    string
 	cfgFile  string
@@ -29,6 +31,7 @@ func startRunWithoutColor(runCmd *exec.Cmd) {
 
 var rootCmd = &cobra.Command{
 	Use:     "colorize [OPTOINS] -- COMMAND [OPTIONS/ARGUMENTS]",
+	Version: Version,
 	Example: "colorize -- stat go.mod",
 	Short:   "A colorizer for your favorite commands",
 	Run: func(cmd *cobra.Command, args []string) {
