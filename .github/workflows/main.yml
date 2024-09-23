@@ -86,13 +86,12 @@ jobs:
           GOOS=$(echo "${{ matrix.os }}")
           GOARCH=$(echo "${{ matrix.arch }}")
 
-          GOOS=$GOOS GOARCH=$GOARCH \
-            go build -ldflags "-X colorize/cmd.Version=$VERSION" -o ./bin/colorize-$GOOS-$GOARCH
+          GOOS=$GOOS GOARCH=$GOARCH go build -ldflags "-X colorize/cmd.Version=$VERSION" -o ./bin/colorize-$GOOS-$GOARCH
 
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
         with:
-          name: colorize-${{ matrix.os }}
+          name: colorize-${{ matrix.os }}-${{ matrix.arch }}
           path: ./bin/colorize*
 
   release:
