@@ -52,7 +52,7 @@ var rootCmd = &cobra.Command{
 			useColor = false
 		case "always":
 			useColor = true
-		case "auto":
+		default:
 			useColor = termcolor.SupportsBasic(os.Stdout)
 		}
 
