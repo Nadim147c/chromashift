@@ -86,12 +86,22 @@ jobs:
           GOOS=$(echo "${{ matrix.os }}")
           GOARCH=$(echo "${{ matrix.arch }}")
 
-          GOOS=$GOOS GOARCH=$GOARCH go build -ldflags "-X colorize/cmd.Version=$VERSION" -o ./bin/colorize-$GOOS-$GOARCH
+          GOOS=$GOOS GOARCH=$GOARCH go build -ldflags "-X colorize/cmd.Version=$VERSION" -o ./bin/colorize
+
+      - name: Generate Completions
+        run: |
+          ./bin/colorize completion zsh > completions/_colorize
+          ./bin/colorize completion bash > completions/colorize.bash
+          ./bin/colorize completion fish > completions/colorize.fish
+
+      - name: Archive Builds
+        shell: bash
+        run: tar -czvf archive.tar.gz  rules/* completions/* colorize.*
 
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
         with:
-          name: colorize-${{ matrix.os }}-${{ matrix.arch }}
+          name: colorize-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
           path: ./bin/colorize*
 
   release:
