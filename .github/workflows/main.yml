@@ -121,9 +121,10 @@ jobs:
         shell: bash
         run: |
           mkdir archives
-          for BIN in ./bin/* ;do
+          for BIN in ./bin/**/* ;do
+            mv -f "$BIN" bin/colorize
             BIN_NAME=$(basename "$BIN")
-            tar -czvf archives/$BIN_NAME.tar.gz "$BIN" rules/* completions/* colorize.*
+            tar -czvf archives/$BIN_NAME.tar.gz bin/colorize rules/* completions/* colorize.*
           done
 
       - name: Create release
