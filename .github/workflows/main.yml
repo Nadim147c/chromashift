@@ -90,6 +90,8 @@ jobs:
 
       - name: Generate Completions
         run: |
+          mkdir completions
+
           ./bin/colorize completion zsh > completions/_colorize
           ./bin/colorize completion bash > completions/colorize.bash
           ./bin/colorize completion fish > completions/colorize.fish
