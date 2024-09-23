@@ -1,0 +1,137 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: "**"
+  pull_request:
+    branches: "**"
+
+jobs:
+  test:
+    name: Lint and Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone the git repository
+        uses: actions/checkout@main
+
+      - name: Setup go
+        uses: actions/setup-go
+
+      - name: Go Tidy
+        run: go mod tidy && git diff --exit-code
+
+      - name: Go Mod
+        run: go mod download
+
+      - name: Go Mod Verify
+        run: go mod verify
+
+      - name: Go Install
+        run: go get -v
+
+      - name: Go Build
+        run: go build -v
+
+  changelog:
+    name: Generate Changelog and Bump Version
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: lint
+    runs-on: ubuntu-latest
+    outputs:
+      clean_changelog: ${{ steps.changelog.outputs.clean_changelog }}
+      skipped: ${{ steps.changelog.outputs.skipped }}
+      tag: ${{ steps.changelog.outputs.tag }}
+    steps:
+      - name: Clone the git repository
+        uses: actions/checkout@main
+
+      - name: Conventional changelog action
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          preset: "conventionalcommits"
+
+  build:
+    name: Build the binaries for release
+    needs: [lint, changelog]
+    if: ${{ needs.changelog.outputs.skipped == 'false' }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            target: linux/amd64
+          - os: ubuntu-latest
+            target: linux/arm64
+          - os: ubuntu-latest
+            target: linux/386
+          - os: ubuntu-latest
+            target: linux/amd64-musl
+          - os: macos-latest
+            target: darwin/amd64
+          - os: macos-latest
+            target: darwin/arm64
+          - os: windows-latest
+            target: windows/amd64
+          - os: windows-latest
+            target: windows/386
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.21"
+
+      - name: Install musl tools
+        if: matrix.target == 'linux/amd64-musl'
+        run: sudo apt-get update && sudo apt-get install musl-tools
+
+      - name: Build binary
+        shell: bash
+        run: |
+          VERSION=$(echo "${{ needs.changelog.outputs.tag }}")
+          GOOS=$(echo "${{ matrix.target }}" | cut -d'/' -f1)
+          GOARCH=$(echo "${{ matrix.target }}" | cut -d'/' -f2)
+          CC=""
+
+          if [[ "${{ matrix.target }}" == "linux/amd64-musl" ]]; then
+            CC="musl-gcc"
+          fi
+
+          CGO_ENABLED=1 CC=$CC GOOS=$GOOS GOARCH=$GOARCH \
+            go build -ldflags "-X colorize/cmd.Version=$VERSION" -o ./bin/colorize-$GOOS-$GOARCH
+
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: spdl-${{ matrix.os }}
+          path: ./bin/spdl*
+
+  release:
+    name: Create the release
+    needs: [lint, changelog, build]
+    if: ${{ needs.changelog.outputs.skipped == 'false' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone the git repository
+        uses: actions/checkout@main
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./release-artifacts
+
+      - name: Create release
+        uses: ncipollo/release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          artifacts: "release-artifacts/*/colorize*"
+          tag: ${{ needs.changelog.outputs.tag }}
+          name: ${{ needs.changelog.outputs.tag }}
+          body: ${{ needs.changelog.outputs.clean_changelog }}
