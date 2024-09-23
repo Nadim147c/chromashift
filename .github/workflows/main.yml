@@ -86,24 +86,17 @@ jobs:
           GOOS=$(echo "${{ matrix.os }}")
           GOARCH=$(echo "${{ matrix.arch }}")
 
-          GOOS=$GOOS GOARCH=$GOARCH go build -ldflags "-X colorize/cmd.Version=$VERSION" -o ./bin/colorize
-
-      - name: Generate Completions
-        run: |
-          mkdir completions
-
-          ./bin/colorize completion zsh > completions/_colorize
-          ./bin/colorize completion bash > completions/colorize.bash
-          ./bin/colorize completion fish > completions/colorize.fish
+          GOOS=$GOOS GOARCH=$GOARCH go build -ldflags "-X colorize/cmd.Version=$VERSION" -o ./bin/colorize-$GOOS-$GOARCH
 
       - name: Archive Builds
         shell: bash
-        run: tar -czvf archive.tar.gz  rules/* completions/* colorize.*
+        run: |
+          tar -czvf archive.tar.gz  rules/* colorize.*
 
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
         with:
-          name: colorize-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
+          name: colorize-${{ matrix.os }}-${{ matrix.arch }}
           path: ./bin/colorize*
 
   release:
@@ -118,14 +111,30 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          path: ./release-artifacts
+          path: ./bin/
+
+      - name: Generate Completions
+        run: |
+          mkdir completions
+          ./bin/colorize-linux-amd64 completion zsh > completions/_colorize
+          ./bin/colorize-linux-amd64 completion bash > completions/colorize.bash
+          ./bin/colorize-linux-amd64 completion fish > completions/colorize.fish
+
+      - name: Archive Builds
+        shell: bash
+        run: |
+          mkdir archives
+          for BIN in ./bin/* ;do
+            BIN_NAME=$(basename "$BIN")
+            tar -czvf $BIN_NAME.tar.gz "$BIN" rules/* completions/* colorize.*
+          done
 
       - name: Create release
         uses: ncipollo/release-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          artifacts: "release-artifacts/*/colorize*"
+          artifacts: "archives/*"
           tag: ${{ needs.changelog.outputs.tag }}
           name: ${{ needs.changelog.outputs.tag }}
           body: ${{ needs.changelog.outputs.clean_changelog }}
