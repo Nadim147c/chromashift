@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@main
 
       - name: Setup go
-        uses: actions/setup-go
+        uses: actions/setup-go@v5
 
       - name: Go Tidy
         run: go mod tidy && git diff --exit-code
@@ -35,7 +35,7 @@ jobs:
   changelog:
     name: Generate Changelog and Bump Version
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    needs: lint
+    needs: test
     runs-on: ubuntu-latest
     outputs:
       clean_changelog: ${{ steps.changelog.outputs.clean_changelog }}
@@ -54,7 +54,7 @@ jobs:
 
   build:
     name: Build the binaries for release
-    needs: [lint, changelog]
+    needs: [test, changelog]
     if: ${{ needs.changelog.outputs.skipped == 'false' }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -80,10 +80,10 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@main
 
       - name: Set up Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version: "1.21"
 
@@ -114,7 +114,7 @@ jobs:
 
   release:
     name: Create the release
-    needs: [lint, changelog, build]
+    needs: [test, changelog, build]
     if: ${{ needs.changelog.outputs.skipped == 'false' }}
     runs-on: ubuntu-latest
     steps:
