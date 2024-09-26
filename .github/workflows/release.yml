@@ -57,23 +57,14 @@ jobs:
       - name: Clone the git repository
         uses: actions/checkout@main
 
-      - name: version
-        id: version
-        run: |
-          tag=${GITHUB_REF/refs\/tags\//}
-          version=${tag#v}
-          major=${version%%.*}
-          echo "tag=${tag}" >> $GITHUB_OUTPUT
-          echo "version=${version}" >> $GITHUB_OUTPUT
-          echo "major=${major}" >> $GITHUB_OUTPUT
-
-      - uses: release-drafter/release-drafter@master
-        id: release-drafter
+      - name: Conventional changelog action
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v5
         with:
-          version: ${{ steps.version.outputs.version }}
-          publish: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          preset: "conventionalcommits"
+          skip-commit: true
+          skip-tag: true
 
       - name: Download artifacts
         uses: actions/download-artifact@v4
@@ -107,4 +98,4 @@ jobs:
           artifacts: "archives/*"
           tag: ${{ steps.version.outputs.tag }}
           name: ${{ steps.version.outputs.tag }}
-          body: ${{ steps.release-drafter.outputs.body }}
+          body: ${{ steps.changelog.outputs.clean_changelog }}
